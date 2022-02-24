@@ -1,0 +1,156 @@
+
+Step 8- In this step the demographics and descriptive stats were run for the master file 
+
+use "file path"
+
+
+codebook MCARE_NBR
+
+tab idx_col 
+tab idx_lob 
+tab idx_gas 
+tab idx_reflux 
+
+tab idx_pr
+
+
+tab DISCHSTAT 
+
+replace DISCHSTAT  = "01" if DISCHSTAT == "1"
+replace DISCHSTAT  = "02" if DISCHSTAT == "2"
+replace DISCHSTAT  = "03" if DISCHSTAT == "3"
+replace DISCHSTAT  = "04" if DISCHSTAT == "4"
+replace DISCHSTAT  = "05" if DISCHSTAT == "5"
+replace DISCHSTAT  = "06" if DISCHSTAT == "6"
+replace DISCHSTAT  = "07" if DISCHSTAT == "7"
+
+gen Aweekend = 1 if WEEKDAY == "7" | WEEKDAY == "6"
+replace Aweekend = 0 if Aweekend == . 
+
+tab Aweekend 
+tab RACE
+
+gen RACE2 = "" 
+replace RACE2  = "A_White" if RACE == "5"
+*replace RACE2  = "A_White" if RACE == "7"
+replace RACE2  = "B_Black" if RACE == "3"
+replace RACE2  = "C_Asian" if RACE == "2"
+replace RACE2  = "D_AmericanIndian" if RACE == "1"
+replace RACE2  = "E_Hawaiian_Pacific" if RACE == "4"
+replace RACE2  = "F_Other" if RACE == "6"
+replace RACE2  = "Unknown" if RACE == "7"
+
+tab RACE2
+
+
+
+gen Age1 = 1 if AGE <=30
+replace Age1 = 2 if AGE >=31 & AGE <=50
+replace Age1 = 3 if AGE >= 51 & AGE <=70
+replace Age1 = 4 if AGE >= 71 & AGE <=90
+replace Age1 = 5 if AGE >= 91
+
+tab Age1
+rename Age1 Age_Cat
+
+
+
+tab SEX idx_pr
+tab Age_Cat idx_pr 
+tab RACE idx_pr 
+tab ETHNICITY idx_pr 
+
+tab ADMSRC idx_pr
+
+tab ADM_PRIOR idx_pr
+
+tab PAYER idx_pr
+
+tab CCIcat idx_pr
+
+#drop DISCHSTAT2 
+gen DISCHSTAT2 = DISCHSTAT 
+
+tab DISCHSTAT idx_pr 
+
+tab DISCHSTAT2 idx_pr 
+
+
+************************
+tab SEX idx_pr, row col chi2
+
+tab Age_Cat idx_pr, row col chi2
+
+tab RACE idx_pr, row col chi2
+
+tab ETHNICITY idx_pr, row col chi2
+
+tab ADMSRC idx_pr, row col chi2
+
+tab ADM_PRIOR idx_pr, row col chi2
+
+tab PAYER idx_pr, row col chi2
+
+tab CCIcat idx_pr, row col chi2
+
+tab DISCHSTAT2 idx_pr, row col chi2
+
+
+****************************************************************************************
+summarize TCHGS 
+summarize TCHGS if idx_pr == 1
+summarize TCHGS if idx_pr == 2
+summarize TCHGS if idx_pr == 3
+
+summarize OPRMCHGS 
+summarize OPRMCHGS if idx_pr == 1
+summarize OPRMCHGS if idx_pr == 2
+summarize OPRMCHGS if idx_pr == 3
+
+summarize MEDCHGS 
+summarize MEDCHGS if idx_pr == 1
+summarize MEDCHGS if idx_pr == 2
+summarize MEDCHGS if idx_pr == 3
+
+summarize ANESCHGS 
+summarize ANESCHGS if idx_pr == 1
+summarize ANESCHGS if idx_pr == 2
+summarize ANESCHGS if idx_pr == 3
+
+summarize RECOVCHGS 
+summarize RECOVCHGS if idx_pr == 1
+summarize RECOVCHGS if idx_pr == 2
+summarize RECOVCHGS if idx_pr == 3
+
+*********************************************************
+
+anova TCHGS idx_pr 
+tabstat TCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+
+anova OPRMCHGS idx_pr 
+tabstat OPRMCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova MEDCHGS idx_pr 
+tabstat MEDCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova ANESCHGS idx_pr 
+tabstat ANESCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova RECOVCHGS idx_pr 
+tabstat RECOVCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+				
+summarize LOSDAYS 
+summarize LOSDAYS if idx_pr == 1
+summarize LOSDAYS if idx_pr == 2
+summarize LOSDAYS if idx_pr == 3
+
+anova LOSDAYS idx_pr 
+tabstat LOSDAYS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+*********************************************************

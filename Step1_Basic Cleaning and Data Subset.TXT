@@ -1,0 +1,128 @@
+
+Step 1- Basic cleaning and data subset(following code is for the year 2020 data file) It was repeated for 2010-2020
+
+use "file path"
+
+drop _merge
+
+rename *, upper  
+
+codebook MCARE_NBR FACLNBR
+
+mdesc MCARE_NBR FACLNBR
+
+drop if AGE<18
+drop if AGE==.
+
+replace PRINDIAG = subinstr(PRINDIAG, ".", "",.)
+
+replace PRINPROC = subinstr(PRINPROC, ".", "",.)
+
+order PRINPROC OTHPROC1 OTHPROC2 OTHPROC3 OTHPROC4 OTHPROC5 OTHPROC6 OTHPROC7 OTHPROC8 OTHPROC9 OTHPROC10 OTHPROC11 OTHPROC12 OTHPROC13 OTHPROC14 OTHPROC15 OTHPROC16 OTHPROC17 OTHPROC18 OTHPROC19 OTHPROC20 OTHPROC21 OTHPROC22 OTHPROC23 OTHPROC24 OTHPROC25 OTHPROC26 OTHPROC27 OTHPROC28 OTHPROC29 OTHPROC30, first 
+	
+isid SYS_RECID, sort
+
+***********************************************************************************************************
+
+**************************************************************************************************************
+
+gen idx_col = . 
+
+foreach v of var PRINPROC{
+	
+replace idx_col = 1 if `v' ==  "0DBE0ZZ" | `v' ==  "0DBE3ZZ" | `v' ==  "0DBE7ZZ" | `v' ==  "0DBE8ZZ" | `v' ==  "0DTH0ZZ" | `v' ==  "0DTH7ZZ" | `v' ==  "0DTH8ZZ" | `v' ==  "0DTF0ZZ" | `v' ==  "0DTF7ZZ" | `v' ==  "0DTF8ZZ" | `v' ==  "0DTK0ZZ" | `v' ==  "0DTL0ZZ" | `v' ==  "0DTL7ZZ" | `v' ==  "0DTL8ZZ" | `v' ==  "0DTG0ZZ" | `v' ==  "0DTG7ZZ" | `v' ==  "0DTG8ZZ" | `v' ==  "0DTN0ZZ" | `v' ==  "0DTN7ZZ" | `v' ==  "0DTN8ZZ" | `v' ==  "0DBE0ZZ" | `v' ==  "0DBE3ZZ" | `v' ==  "0DBE7ZZ" | `v' ==  "0DBE8ZZ" | `v' ==  "0DTE0ZZ" | `v' ==  "0D1N0Z40DTP0ZZ" | `v' ==  "0D1N0Z4" | `v' ==  "0D1N4Z4"| `v' ==  "0DTP0ZZ" | `v' ==  "0DTP4ZZ" | `v' ==  "0DTE7ZZ" | `v' ==  "0DTE8ZZ" | `v' ==  "0D1N0Z4" | `v' ==  "0DTP0ZZ" | `v' ==  "0DTP4ZZ" | `v' ==  "0DTP7ZZ" | `v' == "0DTP8ZZ" | `v' == "0D1N0Z4" | `v' ==  "0DTP7ZZ" | `v' ==  "0DTP8ZZ" | `v' ==  "0DTP0ZZ" | `v' ==  "0DTP4ZZ" 
+	
+}	
+foreach v of var PRINPROC{
+	
+replace idx_col = 2 if `v' ==  "0DBE4ZZ" | `v' ==  "0DTH4ZZ" | `v' ==  "0DTF4ZZ" | `v' ==  "0DTL4ZZ" | `v' ==  "0DTG4ZZ" | `v' ==  "0DTN4ZZ" | `v' ==  "0DBE4ZZ" | `v' ==  "0DTE4ZZ" | `v' ==  "0D1N0Z4" | `v' ==  "0DTP4ZZ" | `v' ==  "0WJF4ZZ" | `v' ==  "0WJG4ZZ" | `v' ==  "0WJJ4ZZ" | `v' ==  "0WJP4ZZ" | `v' ==  "0WJR4ZZ" 
+	
+}	
+	
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_col = 3 if idx_col == 1 & `v'=="8E0W0CZ" | idx_col == 1 & `v'=="8E0X0CZ" | idx_col == 1 & `v'=="8E0Y0CZ" | idx_col == 2 & `v'=="8E0W4CZ" | idx_col == 2 & `v'=="8E0W7CZ" | idx_col == 2 & `v'=="8E0WXCZ" | idx_col == 2 & `v'=="8E0XXCZ"| idx_col == 2 & `v'=="8E0YXCZ"  
+	}
+
+**************************************************************************************************************
+
+gen idx_lob = . 
+
+foreach v of var PRINPROC{
+	
+replace idx_lob = 1 if `v' ==  "0B5K0ZZ" | `v' ==  "0B5L0ZZ" | `v' ==  "0B5M0ZZ" | `v' ==  "0B5K7ZZ" | `v' ==  "0B5K8ZZ" | `v' ==  "0B5L7ZZ" | `v' ==  "0B5L8ZZ" | `v' ==  "0B5M7ZZ" | `v' ==  "0B5M8ZZ" | `v' ==  "0B5K0ZZ" | `v' ==  "0B5K3ZZ" | `v' ==  "0B5K7ZZ" | `v' ==  "0B5L0ZZ" | `v' ==  "0B5L3ZZ" | `v' ==  "0B5L7ZZ" | `v' ==  "0B5M0ZZ" | `v' ==  "0B5M3ZZ" | `v' ==  "0B5M7ZZ" | `v' ==  "0BBK0ZZ" | `v' ==  "0BBK3ZZ" | `v' ==  "0BBK7ZZ" | `v' ==  "0BBL0ZZ" | `v' ==  "0BBL3ZZ" | `v' ==  "0BBL7ZZ" | `v' ==  "0BBM0ZZ" | `v' ==  "0BBM3ZZ" | `v' ==  "0BBM7ZZ" | `v' ==  "0BBK0ZZ" | `v' ==  "0BBK3ZZ" | `v' ==  "0BBK7ZZ" | `v' ==  "0BBL0ZZ" | `v' ==  "0BBL3ZZ" | `v' ==  "0BBL7ZZ" | `v' ==  "0BTC0ZZ" | `v' ==  "0BTD0ZZ" | `v' ==  "0BTF0ZZ" | `v' ==  "0BTG0ZZ" | `v' ==  "0BTJ0ZZ" | `v' ==  "0BTK0ZZ" | `v' ==  "0BTL0ZZ" | `v' ==  "0BTM0ZZ" | `v' ==  "0B5K0ZZ" | `v' ==  "0B5K3ZZ" | `v' ==  "0B5K7ZZ" | `v' ==  "0B5L0ZZ" | `v' ==  "0B5L3ZZ" | `v' ==  "0B5L7ZZ" | `v' ==  "0B5M0ZZ" | `v' ==  "0B5M3ZZ" | `v' ==  "0B5M7ZZ" | `v' ==  "0BBM0ZZ" | `v' ==  "0BBM3ZZ" | `v' ==  "0BBM7ZZ" 
+ 
+	
+}		
+
+foreach v of var PRINPROC{
+	
+replace idx_lob = 2 if `v' ==  "0BBK4ZZ" | `v' ==  "0BBL4ZZ" | `v' ==  "0B5K4ZZ" | `v' ==  "0B5L4ZZ" | `v' ==  "0B5M4ZZ" | `v' ==  "0BBC4ZZ" | `v' ==  "0BBD4ZZ" | `v' ==  "0BBF4ZZ" | `v' ==  "0BBG4ZZ" | `v' ==  "0BBH4ZZ" | `v' ==  "0BBJ4ZZ" | `v' ==  "0BBK4ZZ" | `v' ==  "0BBL4ZZ" | `v' ==  "0BTH4ZZ" | `v' ==  "0BTC4ZZ" | `v' ==  "0BTD4ZZ" | `v' ==  "0BTF4ZZ" | `v' ==  "0BTG4ZZ" | `v' ==  "0BTJ4ZZ" | `v' ==  "0BTK4ZZ" | `v' ==  "0BTL4ZZ" | `v' ==  "0BTM4ZZ" 
+
+	
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_lob = 3 if idx_lob == 1 & `v'=="8E0W0CZ" | idx_lob == 2 & `v'=="8E0X0CZ" | idx_lob == 2 & `v'=="8E0Y0CZ" | idx_lob == 2 & `v'=="8E0W4CZ" | idx_lob == 2 & `v'=="8E0W7CZ" | idx_lob == 2 & `v'=="8E0WXCZ" | idx_lob == 2 & `v'=="8E0XXCZ"| idx_lob == 2 & `v'=="8E0YXCZ"  
+	}
+
+**************************************************************************************************************
+
+gen idx_reflux = . 
+
+foreach v of var PRINPROC{
+	
+replace idx_reflux = 1 if `v' ==  "0DV40ZZ" 
+ 
+}		
+
+foreach v of var PRINPROC{
+	
+replace idx_reflux = 2 if `v' ==  "0DV44ZZ" | `v' ==  "0DV43ZZ"  
+	
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_reflux = 3 if idx_reflux == 1 & `v'=="8E0W0CZ" | idx_reflux == 2 & `v'=="8E0W4CZ" | idx_reflux == 2 & `v'=="8E0W3CZ" | idx_reflux == 2 & `v'=="8E0WXCZ" 
+}
+
+**************************************************************************************************************
+
+gen idx_gas = . 
+
+foreach v of var PRINPROC{
+	
+replace idx_gas = 1 if `v' ==  "0D160ZA" | `v' ==  "0D160ZA" 
+ 
+}		
+
+foreach v of var PRINPROC{
+	
+replace idx_gas = 2 if `v' ==  "0D164ZA" 
+	
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_gas = 3 if idx_gas == 1 & `v'=="8E0W0CZ" | idx_gas == 2 & `v'=="8E0W4CZ" | idx_gas == 2 & `v'=="8E0W3CZ" 
+}
+
+*********************************************
+
+gen idx_pr = . 
+
+replace idx_pr = 1 if  idx_col == 1 | idx_gas == 1 | idx_lob == 1 | idx_reflux == 1
+
+replace idx_pr = 2 if  idx_col == 2 | idx_gas == 2 | idx_lob == 2 | idx_reflux == 2 
+
+replace idx_pr = 3 if  idx_col == 3 | idx_gas == 3 | idx_lob == 3 | idx_reflux == 3 
+ 
+
+tab idx_col 
+tab idx_gas 
+tab idx_lob 
+tab idx_reflux 
+ 
+tab idx_pr 
+
+drop if idx_pr == .
+
+save "file path"
